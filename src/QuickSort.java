@@ -17,38 +17,48 @@ public class QuickSort {
 
     /** Partition the array list[first..last] */
     private static int partition(int[] list, int first, int last) {
-        int pivot = list[first]; // Choose the first element as the pivot
+        // Choose the middle element as the pivot
+        int middleIndex = first + (last - first) / 2;
+        int pivot = list[middleIndex];
+
+        // Swap pivot with the first element
+        swap(list, first, middleIndex);
+
         int low = first + 1; // Index for forward search
         int high = last; // Index for backward search
 
         while (high > low) {
             // Search forward from left
-            while (low <= high && list[low] <= pivot)
+            while (low <= high && list[low] <= pivot) {
                 low++;
+            }
 
             // Search backward from right
-            while (low <= high && list[high] > pivot)
+            while (low <= high && list[high] > pivot) {
                 high--;
+            }
 
             // Swap two elements in the list
             if (high > low) {
-                int temp = list[high];
-                list[high] = list[low];
-                list[low] = temp;
+                swap(list, high, low);
             }
         }
-
-        while (high > first && list[high] >= pivot)
-            high--;
 
         // Swap pivot with list[high]
         if (pivot > list[high]) {
             list[first] = list[high];
             list[high] = pivot;
-            return high;
-        } else {
-            return first;
         }
+
+        // Return the index of pivot
+        return high;
+    }
+
+    /** Swap two elements in the list */
+    private static void swap(int[] list, int i, int j) {
+        int temp = list[i];
+        list[i] = list[j];
+        list[j] = temp;
     }
 
     /** A test method */
@@ -66,30 +76,28 @@ public class QuickSort {
         System.out.println("Sorting took " + durationMillis + " milliseconds.");
         System.out.println("Sorting took " + durationSeconds + " seconds.");
 
-        for (int i = 0; i < list.length; i++)
+        // Print sorted list
+        for (int i = 0; i < list.length; i++) {
             System.out.print(list[i] + " ");
+        }
     }
 
+    /** Read numbers from file */
     private static int[] readNumbersFromFile(String filename) {
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(filename));
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             String line;
             StringBuilder sb = new StringBuilder();
             while ((line = reader.readLine()) != null) {
                 sb.append(line).append(" ");
             }
-            reader.close();
             String[] numbersString = sb.toString().split(" ");
             int[] numbers = new int[numbersString.length];
             for (int i = 0; i < numbersString.length; i++) {
                 numbers[i] = Integer.parseInt(numbersString[i]);
             }
             return numbers;
-        } catch (IOException e) {
-            System.err.println("Error reading from file: " + e.getMessage());
-            return new int[0];
-        } catch (NumberFormatException e) {
-            System.err.println("Error parsing number: " + e.getMessage());
+        } catch (IOException | NumberFormatException e) {
+            System.err.println("Error reading or parsing from file: " + e.getMessage());
             return new int[0];
         }
     }

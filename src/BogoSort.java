@@ -5,9 +5,13 @@ import java.util.Random;
 
 public class BogoSort {
     public static void bogoSort(int[] list) {
+        long startTime = System.nanoTime(); // Start timer
         while (!isSorted(list)) {
             shuffleArray(list);
         }
+        long endTime = System.nanoTime(); // End timer
+        double durationSeconds = (endTime - startTime) / 1e9; // Convert to seconds
+        System.out.println("BogoSort took " + durationSeconds + " seconds.");
     }
 
     private static boolean isSorted(int[] list) {
@@ -31,7 +35,7 @@ public class BogoSort {
 
     /** A test method */
     public static void main(String[] args) {
-        String filename = "src/bogonumbers"; // Path to your file in src folder
+        String filename = "src/randomNumbers"; // Path to your file in src folder
         int[] list = readNumbersFromFile(filename);
         bogoSort(list);
         for (int i = 0; i < list.length; i++)
